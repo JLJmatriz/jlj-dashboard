@@ -30,7 +30,7 @@ function fmt(v){
 async function loadOp(op){
   currentOp = op;
   document.querySelectorAll("#ops button").forEach(b => b.classList.toggle("active", b.dataset.op === op));
-  const res = await fetch(`data/${op}.json`);
+  const res = await fetch(`${op}.json`);
   currentData = await res.json();
   buildTabs();
 }

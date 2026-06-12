@@ -1,0 +1,7 @@
+cd "C:\Users\ivann\OneDrive\Documentos\JLJ\Analises Chat"
+python atualizar_site_jlj.py
+
+cd "C:\Users\ivann\OneDrive\Documentos\JLJ\Jlj-dashboard"
+python -m http.server 8000
+
+http://localhost:8000

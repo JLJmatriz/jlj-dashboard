@@ -283,6 +283,328 @@
       "Status": "🟢 OK"
     }
   ],
+  "Criterios_Decisao": [
+    {
+      "Bloco": "ADS",
+      "Critério": "SKU em ADS_ZERAR",
+      "Ação / Leitura": "ZERAR ADS / LIQUIDAR"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "SKU em ADS_REDUZIR",
+      "Ação / Leitura": "REDUZIR ADS"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "SKU em CAMPEOES e MPA >= 10%",
+      "Ação / Leitura": "ESCALAR"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "MPA < 0%",
+      "Ação / Leitura": "ZERAR ADS"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "MPA < 5%",
+      "Ação / Leitura": "CORRIGIR"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "MPA < 10%",
+      "Ação / Leitura": "OTIMIZAR"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "MPA >= 15% e Unidades >= 5",
+      "Ação / Leitura": "ESCALAR"
+    },
+    {
+      "Bloco": "ADS",
+      "Critério": "Caso contrário",
+      "Ação / Leitura": "MANTER"
+    },
+    {
+      "Bloco": "ESTOQUE",
+      "Critério": "Dias_Estoque = 9999",
+      "Ação / Leitura": "SEM GIRO | Validar venda / não comprar"
+    },
+    {
+      "Bloco": "ESTOQUE",
+      "Critério": "Dias_Estoque < 15",
+      "Ação / Leitura": "RISCO RUPTURA | Segurar ads / recomprar urgente"
+    },
+    {
+      "Bloco": "ESTOQUE",
+      "Critério": "Dias_Estoque 15 a 29",
+      "Ação / Leitura": "ATENÇÃO | Escalar controlado"
+    },
+    {
+      "Bloco": "ESTOQUE",
+      "Critério": "Dias_Estoque 30 a 45",
+      "Ação / Leitura": "SAUDÁVEL | Manter operação"
+    },
+    {
+      "Bloco": "ESTOQUE",
+      "Critério": "Dias_Estoque 46 a 60",
+      "Ação / Leitura": "ESTOQUE ALTO | Reduzir compra / girar"
+    },
+    {
+      "Bloco": "ESTOQUE",
+      "Critério": "Dias_Estoque > 60",
+      "Ação / Leitura": "OVERSTOCK | Promoção / queima"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Dias > 60 + MPA > 10% + Lucro > 0 + Venda_Dia >= 1",
+      "Ação / Leitura": "ESTOQUE ESTRATÉGICO"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Dias > 60 + (MPA <= 8% ou Lucro <= 0)",
+      "Ação / Leitura": "OVERSTOCK PROBLEMÁTICO"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Dias > 60",
+      "Ação / Leitura": "OVERSTOCK"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Dias >= 45",
+      "Ação / Leitura": "ESTOQUE ALTO"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Dias >= 30",
+      "Ação / Leitura": "SAUDÁVEL"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Dias >= 15",
+      "Ação / Leitura": "ATENÇÃO"
+    },
+    {
+      "Bloco": "CAPITAL",
+      "Critério": "Caso contrário",
+      "Ação / Leitura": "RISCO RUPTURA"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "CTR < 0,3% e Impressões > 5.000",
+      "Ação / Leitura": "REVISAR ANÚNCIO"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "MPA < 0% e ACOS > 35%",
+      "Ação / Leitura": "PARAR ADS"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "CTR > 0,5% e CVR < 6%",
+      "Ação / Leitura": "AJUSTAR PREÇO / LISTING"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "CPC > R$ 1,50 e CTR < 0,5%",
+      "Ação / Leitura": "REDUZIR BID / KEYWORDS"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "CTR > 0,5%, CVR > 12%, ROAS > 4 e MPA > 15%",
+      "Ação / Leitura": "ESCALAR +10%"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "MPA < 5%",
+      "Ação / Leitura": "REDUZIR ADS"
+    },
+    {
+      "Bloco": "DIAGNÓSTICO ADS",
+      "Critério": "Caso contrário",
+      "Ação / Leitura": "MONITORAR"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "Preço <= 0",
+      "Ação / Leitura": "MANTER | Sem preço"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "Sazonal = RENTABILIZAR",
+      "Ação / Leitura": "Preço * 1,05"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "Sazonal = LIQUIDAR",
+      "Ação / Leitura": "Preço * 0,90"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "CTR < 0,3% e Impressões > 5.000",
+      "Ação / Leitura": "MANTER | Revisar anúncio"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "CTR > 0,5%, CVR > 12%, ROAS > 4, MPA > 15%, Dias_Estoque > 15",
+      "Ação / Leitura": "Preço * 1,03"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "Dias_Estoque > 60",
+      "Ação / Leitura": "Preço * 0,95"
+    },
+    {
+      "Bloco": "PREÇO",
+      "Critério": "Caso contrário",
+      "Ação / Leitura": "MANTER"
+    },
+    {
+      "Bloco": "SAZONALIDADE",
+      "Critério": "ANTES_PICO",
+      "Ação / Leitura": "SAZONAL - RENTABILIZAR"
+    },
+    {
+      "Bloco": "SAZONALIDADE",
+      "Critério": "PICO",
+      "Ação / Leitura": "SAZONAL - GIRO"
+    },
+    {
+      "Bloco": "SAZONALIDADE",
+      "Critério": "POS_EVENTO",
+      "Ação / Leitura": "SAZONAL - LIQUIDAR"
+    },
+    {
+      "Bloco": "SAZONALIDADE",
+      "Critério": "RENTABILIZAR + MPA > 12% + ROAS > 3",
+      "Ação / Leitura": "Subir preço +3% a +8%"
+    },
+    {
+      "Bloco": "SAZONALIDADE",
+      "Critério": "GIRO + MPA > 8%",
+      "Ação / Leitura": "Manter preço e acelerar giro"
+    },
+    {
+      "Bloco": "SAZONALIDADE",
+      "Critério": "LIQUIDAR",
+      "Ação / Leitura": "Baixar preço / cupom / queima"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "MPA >= 15% + Lucro > 80 + Dias <= 60 + CTR > 0,5% + CVR > 8%",
+      "Ação / Leitura": "CAMPEÃO"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "MPA >= 10% + ROAS > 6 + Lucro > 20",
+      "Ação / Leitura": "ESCALÁVEL"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "CTR > 0,5% + CVR < 6%",
+      "Ação / Leitura": "OPORTUNIDADE"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "Dias > 60 + MPA > 10% + Lucro > 0",
+      "Ação / Leitura": "ESTOQUE ESTRATÉGICO"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "Dias > 60",
+      "Ação / Leitura": "CAPITAL PARADO"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "MPA < 0",
+      "Ação / Leitura": "DESTRÓI VALOR"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "MPA > 8%",
+      "Ação / Leitura": "CAIXA"
+    },
+    {
+      "Bloco": "PORTFÓLIO",
+      "Critério": "Caso contrário",
+      "Ação / Leitura": "MONITORAR"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat ↑ + Lucro ↑ + ROI > 1",
+      "Ação / Leitura": "AÇÃO VENCEDORA"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat ↑ + Lucro ↑",
+      "Ação / Leitura": "ESCALA SAUDÁVEL"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat ↑ + Lucro <= 0 + TACOS ↑",
+      "Ação / Leitura": "ESCALA PERIGOSA"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat ↑ + Lucro <= 0",
+      "Ação / Leitura": "VENDE MAIS / LUCRA MENOS"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat ↓ + Lucro ↑",
+      "Ação / Leitura": "LIQUIDAÇÃO EFETIVA"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Ticket ↑ + Fat ↓",
+      "Ação / Leitura": "PREÇO DESTRUIU GIRO"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Ação = ADS + MPA < 0",
+      "Ação / Leitura": "ADS DESTRÓI MARGEM"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat ↓ + Lucro ↓",
+      "Ação / Leitura": "AÇÃO NÃO FUNCIONOU"
+    },
+    {
+      "Bloco": "EFETIVIDADE",
+      "Critério": "Fat estável",
+      "Ação / Leitura": "NEUTRO / INCONCLUSIVO"
+    },
+    {
+      "Bloco": "CEO",
+      "Critério": "MPA >= 12%",
+      "Ação / Leitura": "SAUDÁVEL"
+    },
+    {
+      "Bloco": "CEO",
+      "Critério": "MPA >= 8%",
+      "Ação / Leitura": "ATENÇÃO"
+    },
+    {
+      "Bloco": "CEO",
+      "Critério": "MPA < 8%",
+      "Ação / Leitura": "CRÍTICO"
+    },
+    {
+      "Bloco": "CEO",
+      "Critério": "TACOS <= 10%",
+      "Ação / Leitura": "SAUDÁVEL"
+    },
+    {
+      "Bloco": "CEO",
+      "Critério": "TACOS <= 15%",
+      "Ação / Leitura": "ATENÇÃO"
+    },
+    {
+      "Bloco": "CEO",
+      "Critério": "TACOS > 15%",
+      "Ação / Leitura": "CRÍTICO"
+    }
+  ],
   "Plano_Acao_Semanal": [
     {
       "Ordem": 1,

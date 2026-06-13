@@ -15,7 +15,7 @@ const tabMap = {
   Capital_Investido: "Capital",
   Capital_Grupo: "Capital",
   CHECK_SANIDADE: "Sanidade",
-  Check_Sanidade_Grupo: "Sanidade"
+  Check_Sanidade_Grupo: "Sanidade",
   Criterios_Decisao: "📘 Critérios de Decisão",
 };
 

@@ -194,7 +194,8 @@ function renderCapital(rows){
         <div>Clique para ver tudo</div>
       </div>
 
-      <div class="kpi" onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
+      <div id="card-problematico" class="kpi capital-card"
+      onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
         <div class="label">Capital Problemático</div>
         <div class="value">R$ ${fmt(problematico)}</div>
         <div>Prioridade: destravar caixa</div>
@@ -243,6 +244,21 @@ function renderCapital(rows){
   window.isEstrategico = isEstrategico;
 }
 function renderCapitalFiltro(tipo){
+document.querySelectorAll(".capital-card")
+  .forEach(c => c.classList.remove("selected"));
+
+const cardMap = {
+  total: "card-total",
+  problematico: "card-problematico",
+  ruptura: "card-ruptura",
+  overstock: "card-overstock",
+  estrategico: "card-estrategico"
+};
+
+if(cardMap[tipo]){
+  document.getElementById(cardMap[tipo])
+    ?.classList.add("selected");
+}
   const base = window.capitalBase || [];
   let lista = base;
   let titulo = "Todos os SKUs por capital";

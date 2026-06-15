@@ -248,26 +248,25 @@ function renderCapital(rows){
   window.isOverstock = isOverstock;
   window.isEstrategico = isEstrategico;
 }
-function renderCapitalFiltro(tipo){if(tipo === "potencial"){
-  lista = base.filter(window.isProblematico);
-  titulo = "💰 Potencial Caixa — SKUs problemáticos com caixa destravável estimado";
-}
-document.querySelectorAll(".capital-card")
-  .forEach(c => c.classList.remove("selected"));
+function renderCapitalFiltro(tipo){
 
-const cardMap = {
-  potencial: "card-potencial"
-  total: "card-total",
-  problematico: "card-problematico",
-  ruptura: "card-ruptura",
-  overstock: "card-overstock",
-  estrategico: "card-estrategico"
-};
+  document.querySelectorAll(".capital-card")
+    .forEach(c => c.classList.remove("selected"));
 
-if(cardMap[tipo]){
-  document.getElementById(cardMap[tipo])
-    ?.classList.add("selected");
-}
+  const cardMap = {
+    total: "card-total",
+    problematico: "card-problematico",
+    ruptura: "card-ruptura",
+    overstock: "card-overstock",
+    estrategico: "card-estrategico",
+    potencial: "card-potencial"
+  };
+
+  if(cardMap[tipo]){
+    document.getElementById(cardMap[tipo])
+      ?.classList.add("selected");
+  }
+
   const base = window.capitalBase || [];
   let lista = base;
   let titulo = "Todos os SKUs por capital";
@@ -292,11 +291,13 @@ if(cardMap[tipo]){
     titulo = "🟢 Capital Estratégico — proteger e escalar";
   }
 
+  if(tipo === "potencial"){
+    lista = base.filter(window.isProblematico);
+    titulo = "💰 Potencial Caixa — SKUs problemáticos com caixa destravável estimado";
+  }
+
   document.getElementById("capital-table").innerHTML =
     window.tabelaCapital(lista, titulo);
-}
-function renderTable(rows){
-  document.getElementById("content").innerHTML = tableHtml(rows);
 }
 
 function tableHtml(rows){

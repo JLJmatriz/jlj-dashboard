@@ -1,4 +1,11 @@
 cd "C:\Users\ivann\OneDrive\Documentos\JLJ\Analises Chat"
+python atualizar_site_jlj.py --push
+
+
+
+
+
+cd "C:\Users\ivann\OneDrive\Documentos\JLJ\Analises Chat"
 
 python gerador_dashboard_ecommerce.py
 python gerador_dashboard_executivo_v4.py

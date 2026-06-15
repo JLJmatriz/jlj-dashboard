@@ -143,23 +143,23 @@
     {
       "Bloco": "ROI PLANO",
       "KPI": "Ganho Faturamento",
-      "Valor": 1514.990000000013,
+      "Valor": 20685.11645161291,
       "Leitura": "Atual vs base",
       "Status": null
     },
     {
       "Bloco": "ROI PLANO",
       "KPI": "Ganho Lucro",
-      "Valor": 2273.402045000001,
+      "Valor": 3648.382762935485,
       "Leitura": "Atual vs base",
       "Status": "🟢"
     },
     {
       "Bloco": "ROI PLANO",
       "KPI": "Economia Ads",
-      "Valor": 1777.790000000001,
+      "Valor": -958.0190322580643,
       "Leitura": "Ads base - atual",
-      "Status": "🟢"
+      "Status": "🟡"
     }
   ],
   "CHECK_SANIDADE": [

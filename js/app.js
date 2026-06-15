@@ -124,64 +124,152 @@ function capitalStatus(row){
 
 function renderCapital(rows){
   const capitalCol = "Capital_Estimado_Preco_Venda";
-  const ordenado = [...rows].sort((a,b) => num(b[capitalCol]) - num(a[capitalCol]));
+  const base = [...rows].sort((a,b) => num(b[capitalCol]) - num(a[capitalCol]));
 
-  const total = ordenado.reduce((s,r) => s + num(r[capitalCol]), 0);
+  function isProblematico(r){
+    return capitalStatus(r).includes("PROBLEMÁTICO");
+  }
 
-  const problematico = ordenado
-    .filter(r => capitalStatus(r).includes("PROBLEMÁTICO"))
+  function isRuptura(r){
+    return capitalStatus(r).includes("RUPTURA");
+  }
+
+  function isOverstock(r){
+    return capitalStatus(r).includes("OVERSTOCK");
+  }
+
+  function isEstrategico(r){
+    return capitalStatus(r).includes("ESTRATÉGICO");
+  }
+
+  const total = base.reduce((s,r) => s + num(r[capitalCol]), 0);
+
+  const problematico = base
+    .filter(isProblematico)
     .reduce((s,r) => s + num(r[capitalCol]), 0);
 
-  const ruptura = ordenado
-    .filter(r => capitalStatus(r).includes("RUPTURA"))
+  const ruptura = base
+    .filter(isRuptura)
+    .reduce((s,r) => s + num(r[capitalCol]), 0);
+
+  const overstock = base
+    .filter(isOverstock)
+    .reduce((s,r) => s + num(r[capitalCol]), 0);
+
+  const estrategico = base
+    .filter(isEstrategico)
     .reduce((s,r) => s + num(r[capitalCol]), 0);
 
   const potencialCaixa = problematico * 0.40;
 
+  function tabelaCapital(lista, titulo){
+    return `
+      <div class="card">
+        <b>${titulo}</b>
+        ${tableHtml(
+          lista.map(r => ({
+            Status_Executivo: capitalStatus(r),
+            SKU: r.SKU,
+            Produto: r.Produto,
+            Capital: r[capitalCol],
+            Estoque: r.Estoque,
+            Dias_Estoque: r.Dias_Estoque,
+            Venda_Dia_30d: r.Venda_Dia_30d,
+            Diagnostico_Estoque: r.Diagnostico_Estoque,
+            Status_Capital: r.Status_Capital,
+            Acao_Capital: r.Acao_Capital,
+            MPA: r.MPA,
+            Lucro_Pos_Ads: r.Lucro_Pos_Ads,
+          }))
+        )}
+      </div>
+    `;
+  }
+
   document.getElementById("content").innerHTML = `
     <div class="grid">
-      <div class="kpi">
+      <div class="kpi" onclick="renderCapitalFiltro('total')" style="cursor:pointer">
         <div class="label">Capital Total</div>
         <div class="value">R$ ${fmt(total)}</div>
+        <div>Clique para ver tudo</div>
       </div>
-      <div class="kpi">
+
+      <div class="kpi" onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
         <div class="label">Capital Problemático</div>
         <div class="value">R$ ${fmt(problematico)}</div>
+        <div>Prioridade: destravar caixa</div>
       </div>
-      <div class="kpi">
-        <div class="label">Capital em Ruptura / Proteger</div>
+
+      <div class="kpi" onclick="renderCapitalFiltro('ruptura')" style="cursor:pointer">
+        <div class="label">Ruptura / Proteger</div>
         <div class="value">R$ ${fmt(ruptura)}</div>
+        <div>Não liquidar sem análise</div>
       </div>
-      <div class="kpi">
-        <div class="label">Potencial Caixa Destravável</div>
+
+      <div class="kpi" onclick="renderCapitalFiltro('overstock')" style="cursor:pointer">
+        <div class="label">Overstock</div>
+        <div class="value">R$ ${fmt(overstock)}</div>
+        <div>Girar com controle</div>
+      </div>
+
+      <div class="kpi" onclick="renderCapitalFiltro('estrategico')" style="cursor:pointer">
+        <div class="label">Capital Estratégico</div>
+        <div class="value">R$ ${fmt(estrategico)}</div>
+        <div>Proteger / escalar</div>
+      </div>
+
+      <div class="kpi" onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
+        <div class="label">Potencial Caixa</div>
         <div class="value">R$ ${fmt(potencialCaixa)}</div>
+        <div>Estimativa 40%</div>
       </div>
     </div>
 
     <div class="card">
       <b>Leitura executiva:</b>
-      capital problemático é prioridade de destravar caixa, mas itens em ruptura devem ser protegidos antes de qualquer liquidação.
+      clique em um card para filtrar a tabela abaixo. Capital problemático é prioridade de caixa; ruptura deve ser protegida.
     </div>
 
-    ${tableHtml(
-      ordenado.map(r => ({
-        Status_Executivo: capitalStatus(r),
-        SKU: r.SKU,
-        Produto: r.Produto,
-        Capital: r[capitalCol],
-        Estoque: r.Estoque,
-        Dias_Estoque: r.Dias_Estoque,
-        Venda_Dia_30d: r.Venda_Dia_30d,
-        Diagnostico_Estoque: r.Diagnostico_Estoque,
-        Status_Capital: r.Status_Capital,
-        Acao_Capital: r.Acao_Capital,
-        MPA: r.MPA,
-        Lucro_Pos_Ads: r.Lucro_Pos_Ads,
-      }))
-    )}
+    <div id="capital-table">
+      ${tabelaCapital(base, "Todos os SKUs por capital")}
+    </div>
   `;
-}
 
+  window.capitalBase = base;
+  window.tabelaCapital = tabelaCapital;
+  window.isProblematico = isProblematico;
+  window.isRuptura = isRuptura;
+  window.isOverstock = isOverstock;
+  window.isEstrategico = isEstrategico;
+}
+function renderCapitalFiltro(tipo){
+  const base = window.capitalBase || [];
+  let lista = base;
+  let titulo = "Todos os SKUs por capital";
+
+  if(tipo === "problematico"){
+    lista = base.filter(window.isProblematico);
+    titulo = "🔴 Capital Problemático — ação para destravar caixa";
+  }
+
+  if(tipo === "ruptura"){
+    lista = base.filter(window.isRuptura);
+    titulo = "⚠️ Ruptura / Proteger Estoque — não liquidar automaticamente";
+  }
+
+  if(tipo === "overstock"){
+    lista = base.filter(window.isOverstock);
+    titulo = "🟠 Overstock — girar com controle";
+  }
+
+  if(tipo === "estrategico"){
+    lista = base.filter(window.isEstrategico);
+    titulo = "🟢 Capital Estratégico — proteger e escalar";
+  }
+
+  document.getElementById("capital-table").innerHTML =
+    window.tabelaCapital(lista, titulo);
+}
 function renderTable(rows){
   document.getElementById("content").innerHTML = tableHtml(rows);
 }

@@ -223,8 +223,9 @@ function renderCapital(rows){
         <div>Proteger / escalar</div>
       </div>
 
-      <div class="kpi" onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
-        <div class="label">Potencial Caixa</div>
+      <div id="card-potencial" class="kpi capital-card"
+      onclick="renderCapitalFiltro('potencial')" style="cursor:pointer">
+      <div class="label">Potencial Caixa</div>
         <div class="value">R$ ${fmt(potencialCaixa)}</div>
         <div>Estimativa 40%</div>
       </div>
@@ -247,11 +248,15 @@ function renderCapital(rows){
   window.isOverstock = isOverstock;
   window.isEstrategico = isEstrategico;
 }
-function renderCapitalFiltro(tipo){
+function renderCapitalFiltro(tipo){if(tipo === "potencial"){
+  lista = base.filter(window.isProblematico);
+  titulo = "💰 Potencial Caixa — SKUs problemáticos com caixa destravável estimado";
+}
 document.querySelectorAll(".capital-card")
   .forEach(c => c.classList.remove("selected"));
 
 const cardMap = {
+  potencial: "card-potencial"
   total: "card-total",
   problematico: "card-problematico",
   ruptura: "card-ruptura",

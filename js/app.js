@@ -188,32 +188,36 @@ function renderCapital(rows){
 
   document.getElementById("content").innerHTML = `
     <div class="grid">
-      <div class="kpi" onclick="renderCapitalFiltro('total')" style="cursor:pointer">
+     <div id="card-total" class="kpi capital-card"
+     onclick="renderCapitalFiltro('total')" style="cursor:pointer">
         <div class="label">Capital Total</div>
         <div class="value">R$ ${fmt(total)}</div>
         <div>Clique para ver tudo</div>
       </div>
 
-      <div id="card-problematico" class="kpi capital-card"
-      onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
+     <div id="card-problematico" class="kpi capital-card"
+          onclick="renderCapitalFiltro('problematico')" style="cursor:pointer">
         <div class="label">Capital Problemático</div>
         <div class="value">R$ ${fmt(problematico)}</div>
         <div>Prioridade: destravar caixa</div>
       </div>
 
-      <div class="kpi" onclick="renderCapitalFiltro('ruptura')" style="cursor:pointer">
+      <div id="card-ruptura" class="kpi capital-card"
+      onclick="renderCapitalFiltro('ruptura')" style="cursor:pointer">
         <div class="label">Ruptura / Proteger</div>
         <div class="value">R$ ${fmt(ruptura)}</div>
         <div>Não liquidar sem análise</div>
       </div>
 
-      <div class="kpi" onclick="renderCapitalFiltro('overstock')" style="cursor:pointer">
+      <div id="card-overstock" class="kpi capital-card"
+      onclick="renderCapitalFiltro('overstock')" style="cursor:pointer">
         <div class="label">Overstock</div>
         <div class="value">R$ ${fmt(overstock)}</div>
         <div>Girar com controle</div>
       </div>
 
-      <div class="kpi" onclick="renderCapitalFiltro('estrategico')" style="cursor:pointer">
+     <div id="card-estrategico" class="kpi capital-card"
+     onclick="renderCapitalFiltro('estrategico')" style="cursor:pointer">
         <div class="label">Capital Estratégico</div>
         <div class="value">R$ ${fmt(estrategico)}</div>
         <div>Proteger / escalar</div>

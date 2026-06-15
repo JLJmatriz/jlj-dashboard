@@ -15,7 +15,8 @@ const tabMap = {
   Capital_Investido: "Capital",
   Capital_Grupo: "Capital",
   CHECK_SANIDADE: "Sanidade",
-  Check_Sanidade_Grupo: "Sanidade"
+  Check_Sanidade_Grupo: "Sanidade",
+  Criterios_Decisao: "📘 Critérios de Decisão",
 };
 
 function fmt(v){
@@ -25,6 +26,12 @@ function fmt(v){
     return v.toLocaleString("pt-BR", {maximumFractionDigits:2});
   }
   return v;
+}
+
+function num(v){
+  if(v === null || v === undefined || v === "") return 0;
+  if(typeof v === "number") return v;
+  return Number(String(v).replace(/\./g,"").replace(",", ".")) || 0;
 }
 
 async function loadOp(op){
@@ -65,6 +72,11 @@ function renderTab(key){
     return;
   }
 
+  if(key === "Capital_Investido" || key === "Capital_Grupo"){
+    renderCapital(rows);
+    return;
+  }
+
   renderTable(rows);
 }
 
@@ -84,6 +96,89 @@ function renderCEO(rows){
       `).join("")}
     </div>
     ${tableHtml(rows)}
+  `;
+}
+
+function capitalStatus(row){
+  const diag = String(row.Diagnostico_Estoque || "").toUpperCase();
+  const status = String(row.Status_Capital || "").toUpperCase();
+  const dias = num(row.Dias_Estoque);
+
+  if(diag.includes("RISCO RUPTURA") || dias < 15){
+    return "⚠️ RUPTURA / PROTEGER";
+  }
+  if(status.includes("PROBLEMÁTICO")){
+    return "🔴 CAPITAL PROBLEMÁTICO";
+  }
+  if(status.includes("OVERSTOCK")){
+    return "🟠 OVERSTOCK";
+  }
+  if(status.includes("ESTOQUE ALTO")){
+    return "🟡 ESTOQUE ALTO";
+  }
+  if(status.includes("ESTRATÉGICO")){
+    return "🟢 ESTRATÉGICO";
+  }
+  return status || diag || "MONITORAR";
+}
+
+function renderCapital(rows){
+  const capitalCol = "Capital_Estimado_Preco_Venda";
+  const ordenado = [...rows].sort((a,b) => num(b[capitalCol]) - num(a[capitalCol]));
+
+  const total = ordenado.reduce((s,r) => s + num(r[capitalCol]), 0);
+
+  const problematico = ordenado
+    .filter(r => capitalStatus(r).includes("PROBLEMÁTICO"))
+    .reduce((s,r) => s + num(r[capitalCol]), 0);
+
+  const ruptura = ordenado
+    .filter(r => capitalStatus(r).includes("RUPTURA"))
+    .reduce((s,r) => s + num(r[capitalCol]), 0);
+
+  const potencialCaixa = problematico * 0.40;
+
+  document.getElementById("content").innerHTML = `
+    <div class="grid">
+      <div class="kpi">
+        <div class="label">Capital Total</div>
+        <div class="value">R$ ${fmt(total)}</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Capital Problemático</div>
+        <div class="value">R$ ${fmt(problematico)}</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Capital em Ruptura / Proteger</div>
+        <div class="value">R$ ${fmt(ruptura)}</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Potencial Caixa Destravável</div>
+        <div class="value">R$ ${fmt(potencialCaixa)}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <b>Leitura executiva:</b>
+      capital problemático é prioridade de destravar caixa, mas itens em ruptura devem ser protegidos antes de qualquer liquidação.
+    </div>
+
+    ${tableHtml(
+      ordenado.map(r => ({
+        Status_Executivo: capitalStatus(r),
+        SKU: r.SKU,
+        Produto: r.Produto,
+        Capital: r[capitalCol],
+        Estoque: r.Estoque,
+        Dias_Estoque: r.Dias_Estoque,
+        Venda_Dia_30d: r.Venda_Dia_30d,
+        Diagnostico_Estoque: r.Diagnostico_Estoque,
+        Status_Capital: r.Status_Capital,
+        Acao_Capital: r.Acao_Capital,
+        MPA: r.MPA,
+        Lucro_Pos_Ads: r.Lucro_Pos_Ads,
+      }))
+    )}
   `;
 }
 

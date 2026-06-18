@@ -143,21 +143,21 @@
     {
       "Bloco": "ROI PLANO",
       "KPI": "Ganho Faturamento",
-      "Valor": 21258.17806451613,
+      "Valor": 21258.17806451612,
       "Leitura": "Atual vs base",
       "Status": null
     },
     {
       "Bloco": "ROI PLANO",
       "KPI": "Ganho Lucro",
-      "Valor": 4158.912870580646,
+      "Valor": 4139.455451225807,
       "Leitura": "Atual vs base",
       "Status": "🟢"
     },
     {
       "Bloco": "ROI PLANO",
       "KPI": "Economia Ads",
-      "Valor": -759.8948387096766,
+      "Valor": -779.3522580645158,
       "Leitura": "Ads base - atual",
       "Status": "🟡"
     }
@@ -194,7 +194,7 @@
     {
       "Bloco": "INTEGRIDADE",
       "Check": "SKUs com estoque mas sem venda MTD",
-      "Valor": 5,
+      "Valor": 6,
       "Leitura": "Produto parado com capital imobilizado",
       "Status": "🟡 Monitorar"
     },
@@ -1856,21 +1856,21 @@
       "Descrição": null,
       "Data_Inicio": null,
       "Data_Final": null,
-      "Fat_Dia_Base": 0.0,
-      "Fat_Dia_Atual": 0.0,
-      "Delta_Fat_Dia": 0.0,
-      "Delta_Fat_Dia_%": 0.0,
-      "Lucro_Dia_Base": -1.080967741935484,
-      "Lucro_Dia_Atual": 0.0,
-      "Delta_Lucro_Dia": 1.080967741935484,
-      "Delta_Lucro_Dia_%": -1.0,
-      "Ticket_Base": 0.0,
-      "Ticket_Atual": 0.0,
-      "Delta_Ticket": 0.0,
-      "TACOS_Base": 0.0,
-      "TACOS_Atual": 0.0,
-      "Delta_TACOS": 0.0,
-      "ROI_Acao": 0.0,
+      "Fat_Dia_Base": null,
+      "Fat_Dia_Atual": null,
+      "Delta_Fat_Dia": null,
+      "Delta_Fat_Dia_%": null,
+      "Lucro_Dia_Base": null,
+      "Lucro_Dia_Atual": null,
+      "Delta_Lucro_Dia": null,
+      "Delta_Lucro_Dia_%": null,
+      "Ticket_Base": null,
+      "Ticket_Atual": null,
+      "Delta_Ticket": null,
+      "TACOS_Base": null,
+      "TACOS_Atual": null,
+      "Delta_TACOS": null,
+      "ROI_Acao": null,
       "MPA": null,
       "TACOS": null,
       "ROAS_30d": null,
@@ -1881,7 +1881,7 @@
       "Diagnostico_Ads": null,
       "Acao_Final": null,
       "Proxima_Acao_Agencia": null,
-      "Leitura_Efetividade": "➖ NEUTRO / INCONCLUSIVO"
+      "Leitura_Efetividade": "👀 MONITORAR"
     },
     {
       "SKU": "JLJ_FIL-0065+_FBA",
@@ -4772,21 +4772,21 @@
       "Descrição": null,
       "Data_Inicio": null,
       "Data_Final": null,
-      "Fat_Dia_Base": null,
-      "Fat_Dia_Atual": null,
-      "Delta_Fat_Dia": null,
-      "Delta_Fat_Dia_%": null,
-      "Lucro_Dia_Base": null,
-      "Lucro_Dia_Atual": null,
-      "Delta_Lucro_Dia": null,
-      "Delta_Lucro_Dia_%": null,
-      "Ticket_Base": null,
-      "Ticket_Atual": null,
-      "Delta_Ticket": null,
-      "TACOS_Base": null,
-      "TACOS_Atual": null,
-      "Delta_TACOS": null,
-      "ROI_Acao": null,
+      "Fat_Dia_Base": 0.0,
+      "Fat_Dia_Atual": 0.0,
+      "Delta_Fat_Dia": 0.0,
+      "Delta_Fat_Dia_%": 0.0,
+      "Lucro_Dia_Base": 0.0,
+      "Lucro_Dia_Atual": 0.0,
+      "Delta_Lucro_Dia": 0.0,
+      "Delta_Lucro_Dia_%": 0.0,
+      "Ticket_Base": 0.0,
+      "Ticket_Atual": 0.0,
+      "Delta_Ticket": 0.0,
+      "TACOS_Base": 0.0,
+      "TACOS_Atual": 0.0,
+      "Delta_TACOS": 0.0,
+      "ROI_Acao": 0.0,
       "MPA": null,
       "TACOS": null,
       "ROAS_30d": null,
@@ -4797,7 +4797,7 @@
       "Diagnostico_Ads": null,
       "Acao_Final": null,
       "Proxima_Acao_Agencia": null,
-      "Leitura_Efetividade": "👀 MONITORAR"
+      "Leitura_Efetividade": "➖ NEUTRO / INCONCLUSIVO"
     },
     {
       "SKU": "JLJ_FIL-0081+_FBA",
@@ -5789,7 +5789,7 @@
       "Motivo_Provavel": "Ação executada: Preço"
     },
     {
-      "SKU_Base": "JLJ_FIL-0016",
+      "SKU_Base": "JLJ_FIL-0074",
       "Curva_Base": "SEM VENDA",
       "Curva_Atual": "SEM VENDA",
       "Movimento_ABC": "MANTEVE",
@@ -5799,15 +5799,36 @@
       "Fat_Atual_Dia": 0.0,
       "Delta_Fat_Dia": 0.0,
       "Delta_Fat_Dia_%": 0.0,
-      "Lucro_Base": -33.51,
+      "Lucro_Base": 0.0,
       "Lucro_Atual": 0.0,
-      "Ads_Base": 33.51,
+      "Ads_Base": 0.0,
       "Ads_Atual": 0.0,
       "Un_Base": 0,
       "Un_Atual": 0,
       "Acoes_Executadas": null,
       "Descricoes_Acoes": null,
-      "Motivo_Provavel": "Redução de ads"
+      "Motivo_Provavel": "Sem motivo claro"
+    },
+    {
+      "SKU_Base": "JLJ_FIL-0080_30",
+      "Curva_Base": "SEM VENDA",
+      "Curva_Atual": "SEM VENDA",
+      "Movimento_ABC": "MANTEVE",
+      "Fat_Base": 0.0,
+      "Fat_Atual": 0.0,
+      "Fat_Base_Dia": 0.0,
+      "Fat_Atual_Dia": 0.0,
+      "Delta_Fat_Dia": 0.0,
+      "Delta_Fat_Dia_%": 0.0,
+      "Lucro_Base": 0.0,
+      "Lucro_Atual": 0.0,
+      "Ads_Base": 0.0,
+      "Ads_Atual": 0.0,
+      "Un_Base": 0,
+      "Un_Atual": 0,
+      "Acoes_Executadas": null,
+      "Descricoes_Acoes": null,
+      "Motivo_Provavel": "Sem motivo claro"
     },
     {
       "SKU_Base": "JLJ_FIL-0080_20",
@@ -5852,7 +5873,7 @@
       "Motivo_Provavel": "Sem motivo claro"
     },
     {
-      "SKU_Base": "JLJ_FIL-0074",
+      "SKU_Base": "JLJ_FIL-0072",
       "Curva_Base": "SEM VENDA",
       "Curva_Atual": "SEM VENDA",
       "Movimento_ABC": "MANTEVE",
@@ -5874,27 +5895,6 @@
     },
     {
       "SKU_Base": "JLJ_FIL-0071",
-      "Curva_Base": "SEM VENDA",
-      "Curva_Atual": "SEM VENDA",
-      "Movimento_ABC": "MANTEVE",
-      "Fat_Base": 0.0,
-      "Fat_Atual": 0.0,
-      "Fat_Base_Dia": 0.0,
-      "Fat_Atual_Dia": 0.0,
-      "Delta_Fat_Dia": 0.0,
-      "Delta_Fat_Dia_%": 0.0,
-      "Lucro_Base": 0.0,
-      "Lucro_Atual": 0.0,
-      "Ads_Base": 0.0,
-      "Ads_Atual": 0.0,
-      "Un_Base": 0,
-      "Un_Atual": 0,
-      "Acoes_Executadas": null,
-      "Descricoes_Acoes": null,
-      "Motivo_Provavel": "Sem motivo claro"
-    },
-    {
-      "SKU_Base": "JLJ_FIL-0072",
       "Curva_Base": "SEM VENDA",
       "Curva_Atual": "SEM VENDA",
       "Movimento_ABC": "MANTEVE",
@@ -6866,48 +6866,48 @@
       "Antes_Plano": 37525.09,
       "MTD_Atual": 43046.94,
       "Projetado_Mês": 74136.39666666667,
-      "Variação_Projetada": 36611.30666666667,
-      "Var_%": 0.9756487370627671,
+      "Variação_Projetada": 36611.30666666666,
+      "Var_%": 0.9756487370627669,
       "Base_Calculo": "MTD dia 18 → projetado 31d",
       "Leitura": "Receita incremental vs mês anterior"
     },
     {
       "KPI": "Lucro Pós Ads",
-      "Antes_Plano": 2757.285141,
+      "Antes_Plano": 2790.795141,
       "MTD_Atual": 5759.917146000001,
       "Projetado_Mês": 9919.857307000002,
-      "Variação_Projetada": 7162.572166000002,
-      "Var_%": 2.597690046449934,
+      "Variação_Projetada": 7129.062166000002,
+      "Var_%": 2.554491392530342,
       "Base_Calculo": "MTD dia 18 → projetado 31d",
       "Leitura": "Lucro incremental vs mês anterior"
     },
     {
       "KPI": "Investimento Ads",
-      "Antes_Plano": 5300.630000000001,
+      "Antes_Plano": 5267.12,
       "MTD_Atual": 3837.68,
       "Projetado_Mês": 6609.337777777778,
-      "Variação_Projetada": 1308.707777777777,
-      "Var_%": 0.2468966477150407,
+      "Variação_Projetada": 1342.217777777778,
+      "Var_%": 0.2548295420984861,
       "Base_Calculo": "MTD dia 18 → projetado 31d",
       "Leitura": "Controle de investimento"
     },
     {
       "KPI": "MPA",
-      "Antes_Plano": 0.0734784417838838,
+      "Antes_Plano": 0.07437144430566321,
       "MTD_Atual": 0.1338054957216472,
       "Projetado_Mês": 0.1338054957216471,
-      "Variação_Projetada": 0.06032705393776333,
-      "Var_%": 0.06032705393776333,
+      "Variação_Projetada": 0.05943405141598392,
+      "Var_%": 0.05943405141598392,
       "Base_Calculo": "% direto",
       "Leitura": "Qualidade da margem"
     },
     {
       "KPI": "TACOS",
-      "Antes_Plano": 0.1412556239039001,
+      "Antes_Plano": 0.1403626213821206,
       "MTD_Atual": 0.08915105231637836,
       "Projetado_Mês": 0.08915105231637835,
-      "Variação_Projetada": -0.05210457158752171,
-      "Var_%": -0.05210457158752171,
+      "Variação_Projetada": -0.05121156906574223,
+      "Var_%": -0.05121156906574223,
       "Base_Calculo": "% direto",
       "Leitura": "Dependência de mídia"
     }
@@ -6918,35 +6918,35 @@
       "Mês_Anterior_Fechado_Dia": 1210.486774193548,
       "MTD_Dia": 2391.496666666666,
       "Delta": 1181.009892473118,
-      "Delta_%": 0.9756487370627671
+      "Delta_%": 0.9756487370627667
     },
     {
       "KPI": "Lucro Pós Ads/dia",
-      "Mês_Anterior_Fechado_Dia": 88.94468196774193,
+      "Mês_Anterior_Fechado_Dia": 90.02564970967742,
       "MTD_Dia": 319.995397,
-      "Delta": 231.0507150322581,
-      "Delta_%": 2.597690046449934
+      "Delta": 229.9697472903226,
+      "Delta_%": 2.554491392530341
     },
     {
       "KPI": "Ads/dia",
-      "Mês_Anterior_Fechado_Dia": 170.9880645161291,
+      "Mês_Anterior_Fechado_Dia": 169.9070967741935,
       "MTD_Dia": 213.2044444444444,
-      "Delta": 42.21637992831538,
-      "Delta_%": 0.2468966477150407
+      "Delta": 43.2973476702509,
+      "Delta_%": 0.2548295420984861
     },
     {
       "KPI": "MPA",
-      "Mês_Anterior_Fechado_Dia": 0.0734784417838838,
+      "Mês_Anterior_Fechado_Dia": 0.07437144430566321,
       "MTD_Dia": 0.1338054957216472,
-      "Delta": 0.06032705393776336,
-      "Delta_%": 0.06032705393776336
+      "Delta": 0.05943405141598394,
+      "Delta_%": 0.05943405141598394
     },
     {
       "KPI": "TACOS",
-      "Mês_Anterior_Fechado_Dia": 0.1412556239039001,
+      "Mês_Anterior_Fechado_Dia": 0.1403626213821206,
       "MTD_Dia": 0.08915105231637836,
-      "Delta": -0.0521045715875217,
-      "Delta_%": -0.0521045715875217
+      "Delta": -0.05121156906574222,
+      "Delta_%": -0.05121156906574222
     }
   ],
   "Capital_Investido": [
@@ -8001,9 +8001,9 @@
       "Lucro_Pos_Ads": 0.0
     },
     {
-      "SKU": "JLJ_FIL-0016+_FBA",
-      "Produto": "Bastão de Chuva",
-      "Estoque": 0,
+      "SKU": "JLJ_FIL-0080+_FBA_30",
+      "Produto": "Formas Magnéticas com 30 peças",
+      "Estoque": 33,
       "Preco_Atual": 0.0,
       "Capital_Estimado_Preco_Venda": 0.0,
       "Unidades_30d": 0,
@@ -9253,18 +9253,18 @@
       "Classificacao_Sazonal": "NÃO SAZONAL"
     },
     {
-      "SKU": "JLJ_FIL-0016+_FBA",
-      "Produto": "Bastão de Chuva",
+      "SKU": "JLJ_FIL-0080+_FBA_30",
+      "Produto": "Formas Magnéticas com 30 peças",
       "Categoria_Portfolio": "OPORTUNIDADE",
       "Acao_Portfolio": "Ajustar preço/listing",
       "Faturamento": 0.0,
       "Lucro_Pos_Ads": 0.0,
       "MPA": 0.0,
       "TACOS": 0.0,
-      "CTR_30d": 0.006720430107526882,
+      "CTR_30d": 0.005847953216374269,
       "CVR_30d": 0.0,
       "ROAS_30d": 0.0,
-      "Estoque": 0,
+      "Estoque": 33,
       "Dias_Estoque": 9999.0,
       "Diagnostico_Ads": "AJUSTAR PREÇO / LISTING",
       "Classificacao_Sazonal": "NÃO SAZONAL"

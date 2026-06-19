@@ -17,6 +17,8 @@ const tabMap = {
   Capital_Grupo:        "Capital",
   CHECK_SANIDADE:       "Sanidade",
   Check_Sanidade_Grupo: "Sanidade",
+  Tops_Executivos:      "Tops Executivos",
+  Portfolio_Produtos:   "Portfólio",
   Criterios_Decisao:    "📘 Critérios de Decisão",
 };
 
@@ -66,7 +68,177 @@ function renderTab(key) {
   if (key === "CEO_Dashboard") { renderCEO(rows); return; }
   if (key === "Capital_Investido" || key === "Capital_Grupo") { renderCapital(rows); return; }
   if (key === "CHECK_SANIDADE" || key === "Check_Sanidade_Grupo") { renderSanidade(rows); return; }
+  if (key === "Plano_Acao_Semanal") { renderFiltroGenerico(rows, "Frente", "plano"); return; }
+  if (key === "Efetividade_Acoes") { renderFiltroGenerico(rows, "Leitura_Efetividade", "efetividade"); return; }
+  if (key === "Migracao_ABC" || key === "Migracao_ABC_Grupo") { renderFiltroGenerico(rows, "Movimento_ABC", "migracao"); return; }
+  if (key === "Portfolio_Produtos") { renderFiltroGenerico(rows, "Acao_Portfolio", "portfolio"); return; }
+  if (key === "Tops_Executivos") { renderFiltroGenerico(rows, "Lista", "tops"); return; }
+  if (key === "Curva_ABC" || key === "Analise_ABC" || key === "Analise_ABC_Grupo") { renderFiltroGenerico(rows, "Curva", "abc"); return; }
   renderTable(rows);
+}
+
+// ── FILTRO GENÉRICO ──────────────────────────────────────────
+function renderFiltroGenerico(rows, campoFiltro, id) {
+  const content = document.getElementById("content");
+
+  // Valores únicos do campo de filtro (preservando ordem de aparição)
+  const valores = [...new Set(rows.map(r => String(r[campoFiltro] || "")).filter(Boolean))];
+
+  const btnColor = {
+    // Plano
+    "ADS - PARAR SANGRIA": "#ef4444", "ESCALAR": "#22c55e", "ESTOQUE - RUPTURA": "#f97316",
+    "LISTING": "#3b82f6", "PREÇO": "#8b5cf6", "SAZONAL": "#f59e0b",
+    // Efetividade
+    "🏆 AÇÃO VENCEDORA": "#16a34a", "✅ ESCALA SAUDÁVEL": "#22c55e",
+    "⚠️ ESCALA PERIGOSA": "#f97316", "🟡 VENDE MAIS / LUCRA MENOS": "#f59e0b",
+    "📦 LIQUIDAÇÃO EFETIVA": "#3b82f6", "🔴 ADS DESTRÓI MARGEM": "#ef4444",
+    "❌ AÇÃO NÃO FUNCIONOU": "#dc2626", "➡️ NEUTRO / INCONCLUSIVO": "#6b7280",
+    "🔻 PREÇO DESTRUIU GIRO": "#a855f7",
+    // Migração ABC
+    "SUBIU": "#22c55e", "MANTEVE": "#6b7280", "CAIU": "#ef4444",
+    "NOVO / REATIVADO": "#3b82f6", "SAIU / SEM VENDA": "#f97316",
+    // Curva
+    "A": "#16a34a", "B": "#3b82f6", "C": "#f59e0b",
+  };
+
+  content.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+      <button class="filtro-btn active" id="${id}-todos" onclick="filtroClick('${id}','__todos__','${campoFiltro}')"
+        style="padding:6px 14px;border-radius:20px;border:2px solid #1f4e78;background:#1f4e78;color:#fff;cursor:pointer;font-size:13px">
+        Todos (${rows.length})
+      </button>
+      ${valores.map(v => {
+        const qtd = rows.filter(r => String(r[campoFiltro] || "") === v).length;
+        const cor = btnColor[v] || "#64748b";
+        return `<button class="filtro-btn" id="${id}-${btoa(encodeURIComponent(v)).replace(/=/g,'')}"
+          onclick="filtroClick('${id}','${v.replace(/'/g,"\\'")}','${campoFiltro}')"
+          style="padding:6px 14px;border-radius:20px;border:2px solid ${cor};background:#fff;color:${cor};cursor:pointer;font-size:13px;font-weight:600">
+          ${v} (${qtd})
+        </button>`;
+      }).join("")}
+    </div>
+    <div id="${id}-tabela">${tableHtml(rows)}</div>
+  `;
+
+  window[`_filtro_${id}_rows`] = rows;
+  window[`_filtro_${id}_campo`] = campoFiltro;
+}
+
+function filtroClick(id, valor, campo) {
+  // Highlight do botão
+  document.querySelectorAll(".filtro-btn").forEach(b => {
+    b.style.background = "#fff";
+    b.style.color = b.style.borderColor;
+    b.classList.remove("active");
+  });
+  const btnId = valor === "__todos__" ? `${id}-todos` : `${id}-${btoa(encodeURIComponent(valor)).replace(/=/g,'')}`;
+  const btn = document.getElementById(btnId);
+  if (btn) {
+    btn.style.background = btn.style.borderColor || "#1f4e78";
+    btn.style.color = "#fff";
+    btn.classList.add("active");
+  }
+
+  const rows = window[`_filtro_${id}_rows`] || [];
+  const filtered = valor === "__todos__" ? rows : rows.filter(r => String(r[campo] || "") === valor);
+  document.getElementById(`${id}-tabela`).innerHTML = tableHtml(filtered);
+}
+
+// ── SANIDADE INTERATIVA ──────────────────────────────────────
+function renderSanidade(rows) {
+  const content = document.getElementById("content");
+  const checks  = rows.filter(r => r.Bloco !== "RESUMO");
+  const criticos = checks.filter(r => String(r.Status || "").includes("🔴")).length;
+  const atencao  = checks.filter(r => String(r.Status || "").includes("🟡")).length;
+  const ok       = checks.filter(r => String(r.Status || "").includes("🟢")).length;
+
+  content.innerHTML = `
+    <div class="grid" style="margin-bottom:16px">
+      <div class="kpi capital-card" id="btn-critico" style="cursor:pointer;border-color:#ef4444" onclick="sanidadeFiltro('critico')">
+        <div class="label">🔴 Críticos</div>
+        <div class="value" style="color:#ef4444">${criticos}</div>
+        <div style="font-size:11px;color:#888">Clique para filtrar</div>
+      </div>
+      <div class="kpi capital-card" id="btn-atencao" style="cursor:pointer;border-color:#f59e0b" onclick="sanidadeFiltro('atencao')">
+        <div class="label">🟡 Atenção</div>
+        <div class="value" style="color:#f59e0b">${atencao}</div>
+        <div style="font-size:11px;color:#888">Clique para filtrar</div>
+      </div>
+      <div class="kpi capital-card" id="btn-ok" style="cursor:pointer;border-color:#22c55e" onclick="sanidadeFiltro('ok')">
+        <div class="label">🟢 OK</div>
+        <div class="value" style="color:#22c55e">${ok}</div>
+        <div style="font-size:11px;color:#888">Clique para filtrar</div>
+      </div>
+      <div class="kpi capital-card" id="btn-todos" style="cursor:pointer" onclick="sanidadeFiltro('todos')">
+        <div class="label">📋 Todos</div>
+        <div class="value">${checks.length}</div>
+        <div style="font-size:11px;color:#888">Ver lista completa</div>
+      </div>
+    </div>
+    <div id="sanidade-tabela"></div>
+    <div id="sanidade-skus" style="margin-top:16px"></div>
+  `;
+
+  window._sanidadeChecks = checks;
+  sanidadeFiltro("todos");
+}
+
+function sanidadeFiltro(filtro) {
+  ["critico","atencao","ok","todos"].forEach(f => {
+    const el = document.getElementById("btn-" + f);
+    if (el) el.classList.toggle("selected", f === filtro);
+  });
+  const checks = window._sanidadeChecks || [];
+  let filtered = checks;
+  if (filtro === "critico") filtered = checks.filter(r => String(r.Status || "").includes("🔴"));
+  else if (filtro === "atencao") filtered = checks.filter(r => String(r.Status || "").includes("🟡"));
+  else if (filtro === "ok") filtered = checks.filter(r => String(r.Status || "").includes("🟢"));
+
+  const tabela = document.getElementById("sanidade-tabela");
+  if (!tabela) return;
+  if (!filtered.length) {
+    tabela.innerHTML = "<div class='card' style='color:#666;padding:20px'>Nenhum check nessa categoria.</div>";
+    document.getElementById("sanidade-skus").innerHTML = "";
+    return;
+  }
+
+  const cols = ["Bloco","Check","Valor","Leitura","Status"];
+  tabela.innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}<th>SKUs</th></tr></thead>
+        <tbody>
+          ${filtered.map((r, i) => `
+            <tr style="cursor:pointer" onclick="sanidadeMostrarSkus(${i})" title="Clique para ver SKUs">
+              ${cols.map(c => `<td>${fmt(r[c])}</td>`).join("")}
+              <td style="color:#2563eb;font-size:12px">${r.SKUs_Afetados ? "Ver ▼" : "-"}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+  window._sanidadeFiltrada = filtered;
+  document.getElementById("sanidade-skus").innerHTML = "";
+}
+
+function sanidadeMostrarSkus(idx) {
+  const row = (window._sanidadeFiltrada || [])[idx];
+  const el = document.getElementById("sanidade-skus");
+  if (!el || !row) return;
+  if (!row.SKUs_Afetados) {
+    el.innerHTML = "<div class='card' style='color:#666;padding:12px'>Nenhum SKU registrado para este check.</div>";
+    return;
+  }
+  const skus = row.SKUs_Afetados.split(",").map(s => s.trim()).filter(Boolean);
+  el.innerHTML = `
+    <div class="card">
+      <b>${row.Check}</b> — ${skus.length} SKU(s) afetado(s):
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+        ${skus.map(s => `<span style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:3px 8px;font-size:12px;font-family:monospace">${s}</span>`).join("")}
+      </div>
+    </div>
+  `;
 }
 
 function renderCEO(rows) {
@@ -203,103 +375,6 @@ function renderCapitalFiltro(tipo) {
   if (tipo === "estrategico")  { lista = base.filter(window.isEstrategico);  titulo = "🟢 Capital Estratégico"; }
   if (tipo === "potencial")    { lista = base.filter(window.isProblematico); titulo = "💰 Potencial Caixa Destravável"; }
   document.getElementById("capital-table").innerHTML = window.tabelaCapital(lista, titulo);
-}
-
-// ── SANIDADE INTERATIVA ──────────────────────────────────────
-function renderSanidade(rows) {
-  const content = document.getElementById("content");
-  const checks  = rows.filter(r => r.Bloco !== "RESUMO");
-  const criticos = checks.filter(r => String(r.Status || "").includes("🔴")).length;
-  const atencao  = checks.filter(r => String(r.Status || "").includes("🟡")).length;
-  const ok       = checks.filter(r => String(r.Status || "").includes("🟢")).length;
-
-  content.innerHTML = `
-    <div class="grid" style="margin-bottom:16px">
-      <div class="kpi capital-card" id="btn-critico" style="cursor:pointer;border-color:#ef4444" onclick="sanidadeFiltro('critico')">
-        <div class="label">🔴 Críticos</div>
-        <div class="value" style="color:#ef4444">${criticos}</div>
-        <div style="font-size:11px;color:#888">Clique para filtrar</div>
-      </div>
-      <div class="kpi capital-card" id="btn-atencao" style="cursor:pointer;border-color:#f59e0b" onclick="sanidadeFiltro('atencao')">
-        <div class="label">🟡 Atenção</div>
-        <div class="value" style="color:#f59e0b">${atencao}</div>
-        <div style="font-size:11px;color:#888">Clique para filtrar</div>
-      </div>
-      <div class="kpi capital-card" id="btn-ok" style="cursor:pointer;border-color:#22c55e" onclick="sanidadeFiltro('ok')">
-        <div class="label">🟢 OK</div>
-        <div class="value" style="color:#22c55e">${ok}</div>
-        <div style="font-size:11px;color:#888">Clique para filtrar</div>
-      </div>
-      <div class="kpi capital-card" id="btn-todos" style="cursor:pointer" onclick="sanidadeFiltro('todos')">
-        <div class="label">📋 Todos</div>
-        <div class="value">${checks.length}</div>
-        <div style="font-size:11px;color:#888">Ver lista completa</div>
-      </div>
-    </div>
-    <div id="sanidade-tabela"></div>
-    <div id="sanidade-skus" style="margin-top:16px"></div>
-  `;
-
-  window._sanidadeChecks = checks;
-  sanidadeFiltro("todos");
-}
-
-function sanidadeFiltro(filtro) {
-  ["critico","atencao","ok","todos"].forEach(f => {
-    const el = document.getElementById("btn-" + f);
-    if (el) el.classList.toggle("selected", f === filtro);
-  });
-  const checks = window._sanidadeChecks || [];
-  let filtered = checks;
-  if (filtro === "critico") filtered = checks.filter(r => String(r.Status || "").includes("🔴"));
-  else if (filtro === "atencao") filtered = checks.filter(r => String(r.Status || "").includes("🟡"));
-  else if (filtro === "ok") filtered = checks.filter(r => String(r.Status || "").includes("🟢"));
-
-  const tabela = document.getElementById("sanidade-tabela");
-  if (!tabela) return;
-  if (!filtered.length) {
-    tabela.innerHTML = "<div class='card' style='color:#666;padding:20px'>Nenhum check nessa categoria.</div>";
-    document.getElementById("sanidade-skus").innerHTML = "";
-    return;
-  }
-
-  const cols = ["Bloco","Check","Valor","Leitura","Status"];
-  tabela.innerHTML = `
-    <div class="table-wrap">
-      <table>
-        <thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}<th>SKUs</th></tr></thead>
-        <tbody>
-          ${filtered.map((r, i) => `
-            <tr style="cursor:pointer" onclick="sanidadeMostrarSkus(${i})" title="Clique para ver SKUs">
-              ${cols.map(c => `<td>${fmt(r[c])}</td>`).join("")}
-              <td style="color:#2563eb;font-size:12px">${r.SKUs_Afetados ? "Ver ▼" : "-"}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
-  window._sanidadeFiltrada = filtered;
-  document.getElementById("sanidade-skus").innerHTML = "";
-}
-
-function sanidadeMostrarSkus(idx) {
-  const row = (window._sanidadeFiltrada || [])[idx];
-  const el = document.getElementById("sanidade-skus");
-  if (!el || !row) return;
-  if (!row.SKUs_Afetados) {
-    el.innerHTML = "<div class='card' style='color:#666;padding:12px'>Nenhum SKU registrado para este check.</div>";
-    return;
-  }
-  const skus = row.SKUs_Afetados.split(",").map(s => s.trim()).filter(Boolean);
-  el.innerHTML = `
-    <div class="card">
-      <b>${row.Check}</b> — ${skus.length} SKU(s) afetado(s):
-      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
-        ${skus.map(s => `<span style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:3px 8px;font-size:12px;font-family:monospace">${s}</span>`).join("")}
-      </div>
-    </div>
-  `;
 }
 
 function renderTable(rows) {

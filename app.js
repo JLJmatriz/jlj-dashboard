@@ -71,7 +71,108 @@ function renderTab(key){
     return;
   }
 
+  if(key === "CHECK_SANIDADE" || key === "Check_Sanidade_Grupo"){
+    renderSanidade(rows);
+    return;
+  }
+
   renderTable(rows);
+}
+
+// ── SANIDADE INTERATIVA ──────────────────────────────────────
+function renderSanidade(rows){
+  const content = document.getElementById("content");
+
+  // Separar resumo dos checks de detalhe
+  const resumo = rows.filter(r => r.Bloco === "RESUMO");
+  const checks  = rows.filter(r => r.Bloco !== "RESUMO");
+
+  // Contar por status
+  const criticos  = checks.filter(r => String(r.Status || "").includes("🔴")).length;
+  const atencao   = checks.filter(r => String(r.Status || "").includes("🟡")).length;
+  const ok        = checks.filter(r => String(r.Status || "").includes("🟢")).length;
+
+  // Descobrir qual campo tem os SKUs afetados (pode variar)
+  const skuField = checks[0] ? Object.keys(checks[0]).find(k =>
+    k.toLowerCase().includes("sku") || k.toLowerCase().includes("afetado") || k.toLowerCase().includes("item")
+  ) : null;
+
+  function renderChecks(filtro){
+    let filtered = checks;
+    if(filtro === "critico") filtered = checks.filter(r => String(r.Status || "").includes("🔴"));
+    else if(filtro === "atencao") filtered = checks.filter(r => String(r.Status || "").includes("🟡"));
+    else if(filtro === "ok") filtered = checks.filter(r => String(r.Status || "").includes("🟢"));
+
+    const detalhe = document.getElementById("sanidade-detalhe");
+    if(!detalhe) return;
+
+    if(!filtered.length){
+      detalhe.innerHTML = "<div class='card' style='color:#666'>Nenhum check nessa categoria.</div>";
+      return;
+    }
+
+    detalhe.innerHTML = tableHtml(filtered);
+  }
+
+  content.innerHTML = `
+    <div class="grid" style="margin-bottom:16px">
+      <div class="kpi capital-card" id="btn-critico" style="cursor:pointer;border-color:#ef4444" onclick="sanidadeFiltro('critico')">
+        <div class="label">🔴 Críticos</div>
+        <div class="value" style="color:#ef4444">${criticos}</div>
+        <div style="font-size:11px;color:#888">Clique para ver SKUs</div>
+      </div>
+      <div class="kpi capital-card" id="btn-atencao" style="cursor:pointer;border-color:#f59e0b" onclick="sanidadeFiltro('atencao')">
+        <div class="label">🟡 Atenção</div>
+        <div class="value" style="color:#f59e0b">${atencao}</div>
+        <div style="font-size:11px;color:#888">Clique para ver SKUs</div>
+      </div>
+      <div class="kpi capital-card" id="btn-ok" style="cursor:pointer;border-color:#22c55e" onclick="sanidadeFiltro('ok')">
+        <div class="label">🟢 OK</div>
+        <div class="value" style="color:#22c55e">${ok}</div>
+        <div style="font-size:11px;color:#888">Clique para ver SKUs</div>
+      </div>
+      <div class="kpi capital-card" id="btn-todos" style="cursor:pointer" onclick="sanidadeFiltro('todos')">
+        <div class="label">📋 Todos</div>
+        <div class="value">${checks.length}</div>
+        <div style="font-size:11px;color:#888">Ver lista completa</div>
+      </div>
+    </div>
+
+    <div id="sanidade-detalhe"></div>
+  `;
+
+  // Guardar checks no escopo global para o filtro
+  window._sanidadeChecks = checks;
+  window._sanidadeFiltroAtivo = "todos";
+
+  // Mostrar todos por default
+  sanidadeFiltro("critico");
+}
+
+function sanidadeFiltro(filtro){
+  window._sanidadeFiltroAtivo = filtro;
+
+  // Highlight do card selecionado
+  ["critico","atencao","ok","todos"].forEach(f => {
+    const el = document.getElementById("btn-" + f);
+    if(el) el.classList.toggle("selected", f === filtro);
+  });
+
+  const checks = window._sanidadeChecks || [];
+  let filtered = checks;
+  if(filtro === "critico") filtered = checks.filter(r => String(r.Status || "").includes("🔴"));
+  else if(filtro === "atencao") filtered = checks.filter(r => String(r.Status || "").includes("🟡"));
+  else if(filtro === "ok") filtered = checks.filter(r => String(r.Status || "").includes("🟢"));
+
+  const detalhe = document.getElementById("sanidade-detalhe");
+  if(!detalhe) return;
+
+  if(!filtered.length){
+    detalhe.innerHTML = "<div class='card' style='color:#666;padding:20px'>Nenhum check nessa categoria.</div>";
+    return;
+  }
+
+  detalhe.innerHTML = tableHtml(filtered);
 }
 
 function renderCEO(rows){

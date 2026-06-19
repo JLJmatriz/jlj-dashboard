@@ -83,53 +83,29 @@ function renderTab(key){
 function renderSanidade(rows){
   const content = document.getElementById("content");
 
-  // Separar resumo dos checks de detalhe
   const resumo = rows.filter(r => r.Bloco === "RESUMO");
   const checks  = rows.filter(r => r.Bloco !== "RESUMO");
 
-  // Contar por status
-  const criticos  = checks.filter(r => String(r.Status || "").includes("🔴")).length;
-  const atencao   = checks.filter(r => String(r.Status || "").includes("🟡")).length;
-  const ok        = checks.filter(r => String(r.Status || "").includes("🟢")).length;
-
-  // Descobrir qual campo tem os SKUs afetados (pode variar)
-  const skuField = checks[0] ? Object.keys(checks[0]).find(k =>
-    k.toLowerCase().includes("sku") || k.toLowerCase().includes("afetado") || k.toLowerCase().includes("item")
-  ) : null;
-
-  function renderChecks(filtro){
-    let filtered = checks;
-    if(filtro === "critico") filtered = checks.filter(r => String(r.Status || "").includes("🔴"));
-    else if(filtro === "atencao") filtered = checks.filter(r => String(r.Status || "").includes("🟡"));
-    else if(filtro === "ok") filtered = checks.filter(r => String(r.Status || "").includes("🟢"));
-
-    const detalhe = document.getElementById("sanidade-detalhe");
-    if(!detalhe) return;
-
-    if(!filtered.length){
-      detalhe.innerHTML = "<div class='card' style='color:#666'>Nenhum check nessa categoria.</div>";
-      return;
-    }
-
-    detalhe.innerHTML = tableHtml(filtered);
-  }
+  const criticos = checks.filter(r => String(r.Status || "").includes("🔴")).length;
+  const atencao  = checks.filter(r => String(r.Status || "").includes("🟡")).length;
+  const ok       = checks.filter(r => String(r.Status || "").includes("🟢")).length;
 
   content.innerHTML = `
     <div class="grid" style="margin-bottom:16px">
       <div class="kpi capital-card" id="btn-critico" style="cursor:pointer;border-color:#ef4444" onclick="sanidadeFiltro('critico')">
         <div class="label">🔴 Críticos</div>
         <div class="value" style="color:#ef4444">${criticos}</div>
-        <div style="font-size:11px;color:#888">Clique para ver SKUs</div>
+        <div style="font-size:11px;color:#888">Clique para filtrar</div>
       </div>
       <div class="kpi capital-card" id="btn-atencao" style="cursor:pointer;border-color:#f59e0b" onclick="sanidadeFiltro('atencao')">
         <div class="label">🟡 Atenção</div>
         <div class="value" style="color:#f59e0b">${atencao}</div>
-        <div style="font-size:11px;color:#888">Clique para ver SKUs</div>
+        <div style="font-size:11px;color:#888">Clique para filtrar</div>
       </div>
       <div class="kpi capital-card" id="btn-ok" style="cursor:pointer;border-color:#22c55e" onclick="sanidadeFiltro('ok')">
         <div class="label">🟢 OK</div>
         <div class="value" style="color:#22c55e">${ok}</div>
-        <div style="font-size:11px;color:#888">Clique para ver SKUs</div>
+        <div style="font-size:11px;color:#888">Clique para filtrar</div>
       </div>
       <div class="kpi capital-card" id="btn-todos" style="cursor:pointer" onclick="sanidadeFiltro('todos')">
         <div class="label">📋 Todos</div>
@@ -138,21 +114,15 @@ function renderSanidade(rows){
       </div>
     </div>
 
-    <div id="sanidade-detalhe"></div>
+    <div id="sanidade-tabela"></div>
+    <div id="sanidade-skus" style="margin-top:16px"></div>
   `;
 
-  // Guardar checks no escopo global para o filtro
   window._sanidadeChecks = checks;
-  window._sanidadeFiltroAtivo = "todos";
-
-  // Mostrar todos por default
-  sanidadeFiltro("critico");
+  sanidadeFiltro("todos");
 }
 
 function sanidadeFiltro(filtro){
-  window._sanidadeFiltroAtivo = filtro;
-
-  // Highlight do card selecionado
   ["critico","atencao","ok","todos"].forEach(f => {
     const el = document.getElementById("btn-" + f);
     if(el) el.classList.toggle("selected", f === filtro);
@@ -164,15 +134,56 @@ function sanidadeFiltro(filtro){
   else if(filtro === "atencao") filtered = checks.filter(r => String(r.Status || "").includes("🟡"));
   else if(filtro === "ok") filtered = checks.filter(r => String(r.Status || "").includes("🟢"));
 
-  const detalhe = document.getElementById("sanidade-detalhe");
-  if(!detalhe) return;
+  const tabela = document.getElementById("sanidade-tabela");
+  if(!tabela) return;
 
   if(!filtered.length){
-    detalhe.innerHTML = "<div class='card' style='color:#666;padding:20px'>Nenhum check nessa categoria.</div>";
+    tabela.innerHTML = "<div class='card' style='color:#666;padding:20px'>Nenhum check nessa categoria.</div>";
+    document.getElementById("sanidade-skus").innerHTML = "";
     return;
   }
 
-  detalhe.innerHTML = tableHtml(filtered);
+  // Renderizar tabela com linhas clicáveis
+  const cols = ["Bloco","Check","Valor","Leitura","Status"];
+  tabela.innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}<th>SKUs</th></tr></thead>
+        <tbody>
+          ${filtered.map((r, i) => `
+            <tr style="cursor:pointer" onclick="sanidadeMostrarSkus(${i})" title="Clique para ver SKUs">
+              ${cols.map(c => `<td>${fmt(r[c])}</td>`).join("")}
+              <td style="color:#2563eb;font-size:12px">${r.SKUs_Afetados ? "Ver ▼" : "-"}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  window._sanidadeFiltrada = filtered;
+  document.getElementById("sanidade-skus").innerHTML = "";
+}
+
+function sanidadeMostrarSkus(idx){
+  const row = (window._sanidadeFiltrada || [])[idx];
+  const el = document.getElementById("sanidade-skus");
+  if(!el || !row) return;
+
+  if(!row.SKUs_Afetados){
+    el.innerHTML = "<div class='card' style='color:#666;padding:12px'>Nenhum SKU individual registrado para este check.</div>";
+    return;
+  }
+
+  const skus = row.SKUs_Afetados.split(",").map(s => s.trim()).filter(Boolean);
+  el.innerHTML = `
+    <div class="card">
+      <b>${row.Check}</b> — ${skus.length} SKU(s) afetado(s):
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+        ${skus.map(s => `<span style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:3px 8px;font-size:12px;font-family:monospace">${s}</span>`).join("")}
+      </div>
+    </div>
+  `;
 }
 
 function renderCEO(rows){

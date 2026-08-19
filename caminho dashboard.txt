@@ -1,5 +1,5 @@
 cd "C:\Users\ivann\OneDrive\Documentos\JLJ\Analises Chat"
-python atualizar_site_jlj.py --push
+python atualizar_site_jlj.py
 
 python atualizar_site_jlj.py --skip-dashboards --push
 
